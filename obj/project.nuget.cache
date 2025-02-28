@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Nc7GRsINgqhnma/2cHSvBqHSy0TIfdux6JiaUCMTujp5XLAwoDNevgV8DPppvYBV62rE3FcAmMYzT+iKsAFuhg==",
+  "dgSpecHash": "BHr46ZL0SBOnaC4/ZMZg/pIWqJoQPazSczuIYzMMOzWWydA+eZ7TmlYCyg7d/SUCoJX0hejVObnIZrutFQujIA==",
   "success": true,
   "projectFilePath": "/Users/sumeyyebarut/StockWatch/StockWatch.csproj",
   "expectedPackageFiles": [
@@ -126,7 +126,9 @@
     "/Users/sumeyyebarut/.nuget/packages/nuget.projectmodel/6.11.0/nuget.projectmodel.6.11.0.nupkg.sha512",
     "/Users/sumeyyebarut/.nuget/packages/nuget.protocol/6.11.0/nuget.protocol.6.11.0.nupkg.sha512",
     "/Users/sumeyyebarut/.nuget/packages/nuget.versioning/6.11.0/nuget.versioning.6.11.0.nupkg.sha512",
+    "/Users/sumeyyebarut/.nuget/packages/pipelines.sockets.unofficial/2.2.8/pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "/Users/sumeyyebarut/.nuget/packages/pomelo.entityframeworkcore.mysql/9.0.0-preview.3.efcore.9.0.0/pomelo.entityframeworkcore.mysql.9.0.0-preview.3.efcore.9.0.0.nupkg.sha512",
+    "/Users/sumeyyebarut/.nuget/packages/stackexchange.redis/2.8.24/stackexchange.redis.2.8.24.nupkg.sha512",
     "/Users/sumeyyebarut/.nuget/packages/system.clientmodel/1.0.0/system.clientmodel.1.0.0.nupkg.sha512",
     "/Users/sumeyyebarut/.nuget/packages/system.codedom/6.0.0/system.codedom.6.0.0.nupkg.sha512",
     "/Users/sumeyyebarut/.nuget/packages/system.collections.immutable/8.0.0/system.collections.immutable.8.0.0.nupkg.sha512",
