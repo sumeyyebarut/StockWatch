@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockWatch", "StockWatch.csproj", "{141234AC-8942-DC10-6EC4-58C51B872FA0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{141234AC-8942-DC10-6EC4-58C51B872FA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{141234AC-8942-DC10-6EC4-58C51B872FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{141234AC-8942-DC10-6EC4-58C51B872FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{141234AC-8942-DC10-6EC4-58C51B872FA0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5615235C-705A-4DF9-AEA1-E92501354A1E}
+	EndGlobalSection
+EndGlobal
