@@ -1,15 +1,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using StockWatch.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-//builder.Services.AddDbContext<AppDbContext>(options =>
-  //  options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-    //    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+ 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
