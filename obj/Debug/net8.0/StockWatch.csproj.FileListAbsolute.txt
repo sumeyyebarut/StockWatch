@@ -279,3 +279,8 @@
 /Users/sumeyyebarut/StockWatch/obj/Debug/net8.0/StockWatch.pdb
 /Users/sumeyyebarut/StockWatch/obj/Debug/net8.0/StockWatch.genruntimeconfig.cache
 /Users/sumeyyebarut/StockWatch/obj/Debug/net8.0/ref/StockWatch.dll
+/Users/sumeyyebarut/StockWatch/bin/Debug/net8.0/Microsoft.OpenApi.dll
+/Users/sumeyyebarut/StockWatch/bin/Debug/net8.0/Swashbuckle.AspNetCore.Swagger.dll
+/Users/sumeyyebarut/StockWatch/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/sumeyyebarut/StockWatch/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/Users/sumeyyebarut/StockWatch/obj/Debug/net8.0/StockWatch.MvcApplicationPartsAssemblyInfo.cs
