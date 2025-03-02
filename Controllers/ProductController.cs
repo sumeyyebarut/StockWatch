@@ -50,9 +50,8 @@ namespace StockWatch.Controllers
         // GET: Product/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
+            
             return View();
         }
 
@@ -61,18 +60,18 @@ namespace StockWatch.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,Barcode,CriticalStockLevel,IsActive,CreatedByUserId,UpdatedByUserId,CreatedAt,UpdatedAt")] Product product)
+        public async Task<IActionResult> Create([Bind("Name,CategoryId,Barcode,CriticalStockLevel")] Product product)
         {
-            if (ModelState.IsValid)
+            if (!ProductExistsWithOther(product.Name) && !ProductExistsWithOther(product.Barcode))
             {
+                product.CreatedByUserId=1;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", product.CreatedByUserId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", product.UpdatedByUserId);
-            return View(product);
+            }else{
+              return BadRequest(new { message = "Bu isimde veya barkodda bir ürün zaten var. Lütfen farklı bir isim seçin." });
+
+            }            
         }
 
         // GET: Product/Edit/5
@@ -88,9 +87,8 @@ namespace StockWatch.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", product.CreatedByUserId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", product.UpdatedByUserId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
+            
             return View(product);
         }
 
@@ -99,17 +97,17 @@ namespace StockWatch.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CategoryId,Barcode,CriticalStockLevel,IsActive,CreatedByUserId,UpdatedByUserId,CreatedAt,UpdatedAt")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,CategoryId,Barcode,CriticalStockLevel,IsActive")] Product product)
         {
             if (id != product.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ProductExistsWithOther(product.Name) && !ProductExistsWithOther(product.Barcode))
             {
                 try
-                {
+                {product.UpdatedByUserId=1;
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
@@ -125,11 +123,11 @@ namespace StockWatch.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+            }else{
+             return BadRequest(new { message = "Bu isimde veya barkodda bir ürün zaten var. Lütfen farklı bir isim ya da barkod seçin." });
+
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", product.CreatedByUserId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", product.UpdatedByUserId);
-            return View(product);
+            
         }
 
         // GET: Product/Delete/5
@@ -161,7 +159,9 @@ namespace StockWatch.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
-                _context.Products.Remove(product);
+                product.UpdatedByUserId=1;
+                product.IsActive=false;
+                _context.Products.Update(product);
             }
 
             await _context.SaveChangesAsync();
@@ -171,6 +171,10 @@ namespace StockWatch.Controllers
         private bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.Id == id);
+        }
+             private bool ProductExistsWithOther(string input)
+        {
+            return _context.Products.Any(e => e.Name == input || e.Barcode==input);
         }
     }
 }

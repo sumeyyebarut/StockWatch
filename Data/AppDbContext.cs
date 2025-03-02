@@ -8,29 +8,35 @@ namespace StockWatch.Data;
 
 public partial class AppDbContext : DbContext
 {
+        private readonly IConfiguration _configuration;
+
     public AppDbContext()
     {
     }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options)
+    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration)
         : base(options)
     {
+         _configuration = configuration;
     }
 
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
 
-    public virtual DbSet<StockMovement> StockMovements { get; set; }
-
+    public virtual DbSet<StockMovement> StockMovements { get; set; }  
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Warehouse> Warehouses { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=localhost;port=3306;database=StockWatch;user=root;password=Sumeyye1234", Microsoft.EntityFrameworkCore.ServerVersion.Parse("9.2.0-mysql"));
-
+     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseMySql(connectionString, ServerVersion.Parse("9.2.0-mysql"));
+        }
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -57,7 +63,7 @@ public partial class AppDbContext : DbContext
                 .ValueGeneratedOnAddOrUpdate()
                 .HasColumnType("datetime");
 
-            entity.HasOne(d => d.CreatedByUser).WithMany(p => p.CategoryCreatedByUsers)
+   entity.HasOne(d => d.CreatedByUser).WithMany(p => p.CategoryCreatedByUsers)
                 .HasForeignKey(d => d.CreatedByUserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("categories_ibfk_1");
@@ -65,7 +71,7 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.UpdatedByUser).WithMany(p => p.CategoryUpdatedByUsers)
                 .HasForeignKey(d => d.UpdatedByUserId)
                 .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("categories_ibfk_2");
+                .HasConstraintName("categories_ibfk_2");            
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -96,7 +102,7 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.CategoryId)
                 .HasConstraintName("products_ibfk_1");
 
-            entity.HasOne(d => d.CreatedByUser).WithMany(p => p.ProductCreatedByUsers)
+  entity.HasOne(d => d.CreatedByUser).WithMany(p => p.ProductCreatedByUsers)
                 .HasForeignKey(d => d.CreatedByUserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("products_ibfk_2");
@@ -104,7 +110,7 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.UpdatedByUser).WithMany(p => p.ProductUpdatedByUsers)
                 .HasForeignKey(d => d.UpdatedByUserId)
                 .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("products_ibfk_3");
+                .HasConstraintName("products_ibfk_3");           
         });
 
         modelBuilder.Entity<StockMovement>(entity =>
@@ -130,20 +136,17 @@ public partial class AppDbContext : DbContext
                 .ValueGeneratedOnAddOrUpdate()
                 .HasColumnType("datetime");
 
-            entity.HasOne(d => d.CreatedByUser).WithMany(p => p.StockMovementCreatedByUsers)
-                .HasForeignKey(d => d.CreatedByUserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("stockmovements_ibfk_3");
 
+           
             entity.HasOne(d => d.Product).WithMany(p => p.StockMovements)
                 .HasForeignKey(d => d.ProductId)
                 .HasConstraintName("stockmovements_ibfk_1");
-
-            entity.HasOne(d => d.UpdatedByUser).WithMany(p => p.StockMovementUpdatedByUsers)
+  entity.HasOne(d => d.UpdatedByUser).WithMany(p => p.StockMovementUpdatedByUsers)
                 .HasForeignKey(d => d.UpdatedByUserId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("stockmovements_ibfk_4");
 
+           
             entity.HasOne(d => d.Warehouse).WithMany(p => p.StockMovements)
                 .HasForeignKey(d => d.WarehouseId)
                 .HasConstraintName("stockmovements_ibfk_2");
@@ -192,8 +195,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate()
                 .HasColumnType("datetime");
-
-            entity.HasOne(d => d.CreatedByUser).WithMany(p => p.WarehouseCreatedByUsers)
+                 entity.HasOne(d => d.CreatedByUser).WithMany(p => p.WarehouseCreatedByUsers)
                 .HasForeignKey(d => d.CreatedByUserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("warehouses_ibfk_1");
@@ -203,6 +205,7 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("warehouses_ibfk_2");
         });
+           
 
         OnModelCreatingPartial(modelBuilder);
     }

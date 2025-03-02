@@ -49,8 +49,6 @@ namespace StockWatch.Controllers
         // GET: Category/Create
         public IActionResult Create()
         {
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -59,17 +57,21 @@ namespace StockWatch.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,IsActive,CreatedByUserId,UpdatedByUserId,CreatedAt,UpdatedAt")] Category category)
+        public async Task<IActionResult> Create([Bind("Name")] Category category)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(category);
+            if(CategoryExistsByName(category.Name)){
+                ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Name", category.CreatedByUserId);
+                return BadRequest(new { message = "Bu isimde bir ürün zaten var. Lütfen farklı bir isim seçin." });
+                        
+            }else{
+                category.CreatedByUserId=1;
+                 _context.Add(category);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));    
+
             }
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", category.CreatedByUserId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", category.UpdatedByUserId);
-            return View(category);
+               
+            
         }
 
         // GET: Category/Edit/5
@@ -85,8 +87,10 @@ namespace StockWatch.Controllers
             {
                 return NotFound();
             }
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", category.CreatedByUserId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", category.UpdatedByUserId);
+            if(CategoryExistsByName(category.Name)){
+                return BadRequest(new { message = "Bu isimde bir kategri zaten var. Lütfen farklı bir isim seçin." });
+                        
+            }
             return View(category);
         }
 
@@ -95,17 +99,17 @@ namespace StockWatch.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsActive,CreatedByUserId,UpdatedByUserId,CreatedAt,UpdatedAt")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,IsActive")] Category category)
         {
             if (id != category.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+           
                 try
                 {
+                     category.CreatedByUserId=1;
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
@@ -121,10 +125,8 @@ namespace StockWatch.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", category.CreatedByUserId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", category.UpdatedByUserId);
-            return View(category);
+            
+          
         }
 
         // GET: Category/Delete/5
@@ -154,8 +156,9 @@ namespace StockWatch.Controllers
         {
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
-            {
-                _context.Categories.Remove(category);
+            { category.CreatedByUserId=1;
+            category.IsActive=false;
+                _context.Categories.Update(category);
             }
 
             await _context.SaveChangesAsync();
@@ -165,6 +168,10 @@ namespace StockWatch.Controllers
         private bool CategoryExists(int id)
         {
             return _context.Categories.Any(e => e.Id == id);
+        }
+        private bool CategoryExistsByName(string name)
+        {
+            return _context.Categories.Any(e => e.Name == name);
         }
     }
 }

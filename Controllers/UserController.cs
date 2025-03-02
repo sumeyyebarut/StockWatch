@@ -54,7 +54,7 @@ namespace StockWatch.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username,Email,PasswordHash,IsActive,CreatedAt,UpdatedAt")] User user)
+        public async Task<IActionResult> Create([Bind("Username,Email,PasswordHash")] User user)
         {
             if (ModelState.IsValid)
             {

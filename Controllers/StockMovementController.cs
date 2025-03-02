@@ -51,10 +51,8 @@ namespace StockWatch.Controllers
         // GET: StockMovement/Create
         public IActionResult Create()
         {
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id");
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["WarehouseId"] = new SelectList(_context.Warehouses, "Id", "Id");
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name");
+            ViewData["WarehouseId"] = new SelectList(_context.Warehouses, "Id", "Name");
             return View();
         }
 
@@ -63,19 +61,17 @@ namespace StockWatch.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductId,WarehouseId,Quantity,MovementType,IsActive,CreatedByUserId,UpdatedByUserId,CreatedAt,UpdatedAt")] StockMovement stockMovement)
+        public async Task<IActionResult> Create([Bind("ProductId,WarehouseId,Quantity,MovementType")] StockMovement stockMovement)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(stockMovement);
+            if(stockMovement.Quantity>=0){
+                 _context.Add(stockMovement);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }else{
+                return BadRequest(new { message = "Lütfen geçerli bir ürün adedi giriniz." });
+
             }
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", stockMovement.CreatedByUserId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", stockMovement.ProductId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", stockMovement.UpdatedByUserId);
-            ViewData["WarehouseId"] = new SelectList(_context.Warehouses, "Id", "Id", stockMovement.WarehouseId);
-            return View(stockMovement);
+               
         }
 
         // GET: StockMovement/Edit/5
@@ -91,10 +87,8 @@ namespace StockWatch.Controllers
             {
                 return NotFound();
             }
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", stockMovement.CreatedByUserId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", stockMovement.ProductId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", stockMovement.UpdatedByUserId);
-            ViewData["WarehouseId"] = new SelectList(_context.Warehouses, "Id", "Id", stockMovement.WarehouseId);
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name", stockMovement.ProductId);
+            ViewData["WarehouseId"] = new SelectList(_context.Warehouses, "Id", "Name", stockMovement.WarehouseId);
             return View(stockMovement);
         }
 
@@ -103,17 +97,18 @@ namespace StockWatch.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,WarehouseId,Quantity,MovementType,IsActive,CreatedByUserId,UpdatedByUserId,CreatedAt,UpdatedAt")] StockMovement stockMovement)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,WarehouseId,Quantity,MovementType")] StockMovement stockMovement)
         {
             if (id != stockMovement.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
+           
+            if(stockMovement.Quantity>=0){
+                 try
                 {
+                    stockMovement.UpdatedByUserId=1;
                     _context.Update(stockMovement);
                     await _context.SaveChangesAsync();
                 }
@@ -129,12 +124,12 @@ namespace StockWatch.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+            }else{
+                return BadRequest(new { message = "Lütfen geçerli bir ürün adedi giriniz." });
+
             }
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", stockMovement.CreatedByUserId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", stockMovement.ProductId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", stockMovement.UpdatedByUserId);
-            ViewData["WarehouseId"] = new SelectList(_context.Warehouses, "Id", "Id", stockMovement.WarehouseId);
-            return View(stockMovement);
+               
+            
         }
 
         // GET: StockMovement/Delete/5
@@ -167,7 +162,10 @@ namespace StockWatch.Controllers
             var stockMovement = await _context.StockMovements.FindAsync(id);
             if (stockMovement != null)
             {
-                _context.StockMovements.Remove(stockMovement);
+                stockMovement.UpdatedByUserId=1;
+                stockMovement.UpdatedAt=System.DateTime.UtcNow;
+                stockMovement.IsActive=false;
+                _context.StockMovements.Update(stockMovement);
             }
 
             await _context.SaveChangesAsync();

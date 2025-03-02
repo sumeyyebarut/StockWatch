@@ -49,26 +49,26 @@ namespace StockWatch.Controllers
         // GET: Warehouse/Create
         public IActionResult Create()
         {
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Name");
+            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Name");
             return View();
         }
 
         // POST: Warehouse/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Location,IsActive,IsDeleted,CreatedByUserId,UpdatedByUserId,CreatedAt,UpdatedAt")] Warehouse warehouse)
+        public async Task<IActionResult> Create([Bind("Name,Location")] Warehouse warehouse)
         {
-            if (ModelState.IsValid)
+            if (!WarehouseExists(warehouse.Name))
             {
+                warehouse.CreatedByUserId=1;
                 _context.Add(warehouse);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }else{
+                return BadRequest(new { message = "Bu isimde bir depo zaten var. Lütfen farklı bir isim seçin." });
+
             }
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", warehouse.CreatedByUserId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", warehouse.UpdatedByUserId);
             return View(warehouse);
         }
 
@@ -85,17 +85,14 @@ namespace StockWatch.Controllers
             {
                 return NotFound();
             }
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", warehouse.CreatedByUserId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", warehouse.UpdatedByUserId);
             return View(warehouse);
         }
 
         // POST: Warehouse/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Location,IsActive,IsDeleted,CreatedByUserId,UpdatedByUserId,CreatedAt,UpdatedAt")] Warehouse warehouse)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Location,IsActive")] Warehouse warehouse)
         {
             if (id != warehouse.Id)
             {
@@ -106,6 +103,7 @@ namespace StockWatch.Controllers
             {
                 try
                 {
+                    warehouse.UpdatedByUserId=1;
                     _context.Update(warehouse);
                     await _context.SaveChangesAsync();
                 }
@@ -122,8 +120,6 @@ namespace StockWatch.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Id", warehouse.CreatedByUserId);
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Id", warehouse.UpdatedByUserId);
             return View(warehouse);
         }
 
@@ -155,7 +151,9 @@ namespace StockWatch.Controllers
             var warehouse = await _context.Warehouses.FindAsync(id);
             if (warehouse != null)
             {
-                _context.Warehouses.Remove(warehouse);
+                warehouse.UpdatedByUserId=1;
+                warehouse.IsDeleted=true;
+                _context.Warehouses.Update(warehouse);
             }
 
             await _context.SaveChangesAsync();
@@ -165,6 +163,10 @@ namespace StockWatch.Controllers
         private bool WarehouseExists(int id)
         {
             return _context.Warehouses.Any(e => e.Id == id);
+        }
+        private bool WarehouseExists(string name)
+        {
+            return _context.Warehouses.Any(e => e.Name == name);
         }
     }
 }
