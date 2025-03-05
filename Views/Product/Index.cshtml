@@ -18,9 +18,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Barcode)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CriticalStockLevel)
-            </th>
+            
             <th>
                 @Html.DisplayNameFor(model => model.IsActive)
             </th>
@@ -34,10 +32,10 @@
                 @Html.DisplayNameFor(model => model.Category)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedByUser)
+                @Html.DisplayNameFor(model => model.CreatedByUserId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UpdatedByUser)
+                @Html.DisplayNameFor(model => model.UpdatedByUserId)
             </th>
             <th></th>
         </tr>
@@ -51,9 +49,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Barcode)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CriticalStockLevel)
-            </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.IsActive)
             </td>
@@ -67,10 +63,10 @@
                 @Html.DisplayFor(modelItem => item.Category.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedByUser.Id)
+                @Html.DisplayFor(modelItem => item.CreatedByUserId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UpdatedByUser.Id)
+                @Html.DisplayFor(modelItem => item.UpdatedByUserId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

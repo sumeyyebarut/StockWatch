@@ -22,7 +22,7 @@ namespace StockWatch.Controllers
         // GET: Category
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Categories.Include(c => c.CreatedByUser).Include(c => c.UpdatedByUser);
+            var appDbContext = _context.Categories;
             return View(await appDbContext.ToListAsync());
         }
 
@@ -35,8 +35,6 @@ namespace StockWatch.Controllers
             }
 
             var category = await _context.Categories
-                .Include(c => c.CreatedByUser)
-                .Include(c => c.UpdatedByUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {
@@ -60,7 +58,6 @@ namespace StockWatch.Controllers
         public async Task<IActionResult> Create([Bind("Name")] Category category)
         {
             if(CategoryExistsByName(category.Name)){
-                ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Name", category.CreatedByUserId);
                 return BadRequest(new { message = "Bu isimde bir ürün zaten var. Lütfen farklı bir isim seçin." });
                         
             }else{
@@ -138,8 +135,6 @@ namespace StockWatch.Controllers
             }
 
             var category = await _context.Categories
-                .Include(c => c.CreatedByUser)
-                .Include(c => c.UpdatedByUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {

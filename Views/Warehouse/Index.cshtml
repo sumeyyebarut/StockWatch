@@ -31,11 +31,9 @@
                 @Html.DisplayNameFor(model => model.UpdatedAt)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedByUser)
+                @Html.DisplayNameFor(model => model.CreatedByUserId)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedByUser)
-            </th>
+            
             <th></th>
         </tr>
     </thead>
@@ -61,11 +59,9 @@
                 @Html.DisplayFor(modelItem => item.UpdatedAt)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedByUser.Id)
+                @Html.DisplayFor(modelItem => item.CreatedByUserId)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedByUser.Id)
-            </td>
+            
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

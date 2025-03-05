@@ -22,12 +22,7 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Barcode)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CriticalStockLevel)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CriticalStockLevel)
-        </dd>
+       
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IsActive)
         </dt>
@@ -53,16 +48,16 @@
             @Html.DisplayFor(model => model.Category.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedByUser)
+            @Html.DisplayNameFor(model => model.CreatedByUserId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedByUser.Id)
+            @Html.DisplayFor(model => model.CreatedByUserId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedByUser)
+            @Html.DisplayNameFor(model => model.UpdatedByUserId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedByUser.Id)
+            @Html.DisplayFor(model => model.UpdatedByUserId)
         </dd>
     </dl>
 </div>

@@ -23,9 +23,9 @@ public partial class Warehouse
 
     public DateTime? UpdatedAt { get; set; }
 
-    public virtual User CreatedByUser { get; set; } = null!;
+    public virtual ICollection<ProductStock> ProductStocks { get; set; } = new List<ProductStock>();
 
-    public virtual ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
+    public virtual ICollection<StockMovement> StockMovementFromWarehouses { get; set; } = new List<StockMovement>();
 
-    public virtual User? UpdatedByUser { get; set; }
+    public virtual ICollection<StockMovement> StockMovementToWarehouses { get; set; } = new List<StockMovement>();
 }

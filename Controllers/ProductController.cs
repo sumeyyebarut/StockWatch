@@ -22,7 +22,7 @@ namespace StockWatch.Controllers
         // GET: Product
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Products.Include(p => p.Category).Include(p => p.CreatedByUser).Include(p => p.UpdatedByUser);
+            var appDbContext = _context.Products.Include(p => p.Category);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -36,8 +36,6 @@ namespace StockWatch.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Category)
-                .Include(p => p.CreatedByUser)
-                .Include(p => p.UpdatedByUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -140,8 +138,6 @@ namespace StockWatch.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Category)
-                .Include(p => p.CreatedByUser)
-                .Include(p => p.UpdatedByUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {

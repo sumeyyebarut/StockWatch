@@ -22,7 +22,7 @@ namespace StockWatch.Controllers
         // GET: Warehouse
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Warehouses.Include(w => w.CreatedByUser).Include(w => w.UpdatedByUser);
+            var appDbContext = _context.Warehouses;
             return View(await appDbContext.ToListAsync());
         }
 
@@ -35,8 +35,6 @@ namespace StockWatch.Controllers
             }
 
             var warehouse = await _context.Warehouses
-                .Include(w => w.CreatedByUser)
-                .Include(w => w.UpdatedByUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (warehouse == null)
             {
@@ -49,8 +47,7 @@ namespace StockWatch.Controllers
         // GET: Warehouse/Create
         public IActionResult Create()
         {
-            ViewData["CreatedByUserId"] = new SelectList(_context.Users, "Id", "Name");
-            ViewData["UpdatedByUserId"] = new SelectList(_context.Users, "Id", "Name");
+            
             return View();
         }
 
@@ -103,7 +100,6 @@ namespace StockWatch.Controllers
             {
                 try
                 {
-                    warehouse.UpdatedByUserId=1;
                     _context.Update(warehouse);
                     await _context.SaveChangesAsync();
                 }
@@ -132,8 +128,6 @@ namespace StockWatch.Controllers
             }
 
             var warehouse = await _context.Warehouses
-                .Include(w => w.CreatedByUser)
-                .Include(w => w.UpdatedByUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (warehouse == null)
             {

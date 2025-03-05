@@ -17,8 +17,12 @@
                 <select asp-for="ProductId" class ="form-control" asp-items="ViewBag.ProductId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="WarehouseId" class="control-label"></label>
-                <select asp-for="WarehouseId" class ="form-control" asp-items="ViewBag.WarehouseId"></select>
+                <label asp-for="ToWarehouseId" class="control-label"></label>
+                <select asp-for="ToWarehouseId" class ="form-control" asp-items="ViewBag.ToWarehouseId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="FromWarehouseId" class="control-label"></label>
+                <select asp-for="FromWarehouseId" class ="form-control" asp-items="ViewBag.FromWarehouseId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Quantity" class="control-label"></label>
@@ -27,7 +31,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="MovementType" class="control-label"></label>
-                <input asp-for="MovementType" class="form-control" />
+                <select asp-for="MovementType" class="form-control" >
+                    <option>IN</option>
+                    <option>OUT</option>
+                    <option>TRANSFER</option>
+                </select>
                 <span asp-validation-for="MovementType" class="text-danger"></span>
             </div>
            

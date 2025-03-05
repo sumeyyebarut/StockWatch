@@ -13,8 +13,6 @@ public partial class Product
 
     public string Barcode { get; set; } = null!;
 
-    public int CriticalStockLevel { get; set; }
-
     public bool? IsActive { get; set; }
 
     public int CreatedByUserId { get; set; }
@@ -27,9 +25,7 @@ public partial class Product
 
     public virtual Category Category { get; set; } = null!;
 
-    public virtual User CreatedByUser { get; set; } = null!;
+    public virtual ICollection<ProductStock> ProductStocks { get; set; } = new List<ProductStock>();
 
     public virtual ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
-
-    public virtual User? UpdatedByUser { get; set; }
 }

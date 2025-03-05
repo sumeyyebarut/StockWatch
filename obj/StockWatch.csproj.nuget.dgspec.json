@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/sumeyyebarut/StockWatch/StockWatch.csproj": {}
+    "/Users/sumeyyebarut/Desktop/StockWatch/StockWatch.csproj": {}
   },
   "projects": {
-    "/Users/sumeyyebarut/StockWatch/StockWatch.csproj": {
+    "/Users/sumeyyebarut/Desktop/StockWatch/StockWatch.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/sumeyyebarut/StockWatch/StockWatch.csproj",
+        "projectUniqueName": "/Users/sumeyyebarut/Desktop/StockWatch/StockWatch.csproj",
         "projectName": "StockWatch",
-        "projectPath": "/Users/sumeyyebarut/StockWatch/StockWatch.csproj",
+        "projectPath": "/Users/sumeyyebarut/Desktop/StockWatch/StockWatch.csproj",
         "packagesPath": "/Users/sumeyyebarut/.nuget/packages/",
-        "outputPath": "/Users/sumeyyebarut/StockWatch/obj/",
+        "outputPath": "/Users/sumeyyebarut/Desktop/StockWatch/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/sumeyyebarut/.nuget/NuGet/NuGet.Config"
@@ -43,6 +43,30 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Hangfire": {
+              "target": "Package",
+              "version": "[1.8.18, )"
+            },
+            "Hangfire.AspNetCore": {
+              "target": "Package",
+              "version": "[1.8.18, )"
+            },
+            "Hangfire.Core": {
+              "target": "Package",
+              "version": "[1.8.18, )"
+            },
+            "Hangfire.InMemory": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "Hangfire.MySqlStorage": {
+              "target": "Package",
+              "version": "[2.0.3, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.10.0, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[9.0.2, )"
