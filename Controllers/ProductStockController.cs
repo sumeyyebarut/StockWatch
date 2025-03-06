@@ -50,8 +50,8 @@ namespace StockWatch.Controllers
         // GET: Product/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name");
+            ViewData["ToWarehouseId"] = new SelectList(_context.Warehouses, "Id", "Name");
             return View();
         }
 

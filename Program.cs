@@ -3,29 +3,32 @@ using System.Configuration;
 using Hangfire;
 using Hangfire.MySql;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using StockWatch.Data;
 using StockWatch.Filters;
+using StockWatch.Services.Abstract;
+using StockWatch.Services.Contract;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
- // Add Hangfire services.
-         builder.Services.AddHangfire(x => x.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-         .UseSimpleAssemblyNameTypeSerializer()
-         .UseDefaultTypeSerializer()
-         .UseInMemoryStorage());
-    builder.Services.AddHangfireServer();  // Hangfire iş server'ını ekle
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.Configure<EmailConfiguration>(
+    builder.Configuration.GetSection("EmailConfiguration")
+);
 builder.Services.AddSwaggerGen(); // Swagger 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
- 
+var redis = ConnectionMultiplexer.Connect("localhost:6379");
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+builder.Services.AddScoped<IEmailProvider, EmailProvider>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -54,15 +57,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.UseHangfireDashboard(); // 
-
-app.MapHangfireDashboard("/hangfire", new DashboardOptions
-                {         
-                    AsyncAuthorization =  new[] { new AllowAllAsyncDashboardAuthorizationFilter() },
-                    IgnoreAntiforgeryToken = true
-                });
-
-
 
 app.Run();
 //dotnet ef dbcontext scaffold "Server=localhost;port=3306;Database=StockWatch;User=root;Password=Sumeyye1234;" Pomelo.EntityFrameworkCore.MySql --output-dir Models --context-dir Data --context AppDbContext --force

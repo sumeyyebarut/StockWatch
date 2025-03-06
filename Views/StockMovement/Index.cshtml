@@ -13,24 +13,24 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+                @Html.DisplayNameFor(model => model.Product)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MovementType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FromWarehouseId)
+                @Html.DisplayNameFor(model => model.FromWarehouse)
             </th>
              <th>
-                @Html.DisplayNameFor(model => model.ToWarehouseId)
+                @Html.DisplayNameFor(model => model.ToWarehouse)
+            </th>
+             <th>
+                @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedAt)
             </th>
-           
             <th>
-                @Html.DisplayNameFor(model => model.Product)
+                @Html.DisplayNameFor(model => model.MovementType)
             </th>
+            
            
             <th></th>
         </tr>
@@ -38,29 +38,30 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+             <td>
+                @Html.DisplayFor(modelItem => item.Product.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FromWarehouse.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ToWarehouse.Name)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MovementType)
-            </td>
+            
             
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
-            
+            <td>
+                @Html.DisplayFor(modelItem => item.MovementType)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedBy)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ToWarehouseId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FromWarehouseId)
-            </td>
+           
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

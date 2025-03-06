@@ -1,23 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using StackExchange.Redis;
 using StockWatch.Data;
 using StockWatch.Models;
+using StockWatch.Services.Abstract;
 
 namespace StockWatch.Controllers
 {
     public class StockMovementController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IEmailProvider _emailProvider;
+        private readonly IMemoryCache _memoryCache;
+        //private readonly ConnectionMultiplexer _redis;
+        private readonly ISubscriber _publisher;
 
-        public StockMovementController(AppDbContext context)
+        public StockMovementController(AppDbContext context,IEmailProvider emailProvider,IMemoryCache memoryCache,
+        IConnectionMultiplexer redis)
         {
             _context = context;
+            _emailProvider=emailProvider;   
+            _memoryCache = memoryCache;
+            _publisher = redis.GetSubscriber();
         }
 
         // GET: StockMovement
@@ -44,30 +55,40 @@ namespace StockWatch.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ToWarehouseId,FromWareHouseId,Quantity,MovementType")] StockMovement stockMovement)
-        {
-
-            if(CheckStockForTransfer(stockMovement.ProductId,stockMovement.FromWarehouseId)){
+        public async Task<IActionResult> Create([Bind("ProductId,ToWarehouseId,FromWarehouseId,Quantity,MovementType")] StockMovement stockMovement)
+        { 
+            
+             var stockCheck=CheckStockForTransfer(stockMovement.ProductId,stockMovement.FromWarehouseId);
+                if(stockCheck!=null){
                  _context.Add(stockMovement);
+                stockCheck.StockQuantity=stockCheck.StockQuantity-stockMovement.Quantity;
+                _context.ProductStocks.Update(stockCheck);
                 await _context.SaveChangesAsync();
+
                 //rediste yayınla
+                var redismessage = JsonSerializer.Serialize(stockMovement);
+                _publisher.Publish("stock-movement", redismessage);
                 if(CheckCriticalStock(stockMovement.ProductId,stockMovement.FromWarehouseId)){
-                    //mail gönder  
+
+            var message = new Message("Kritik stok bildirimi",stockMovement.ProductId +"idli urunun stogu kritik seviyenin altina dusmustur.");
+            _emailProvider.SendEmail(message);
                 }
                 return RedirectToAction(nameof(Index));
             }else{
-                return BadRequest(new { message = "Lütfen geçerli bir ürün adedi giriniz." });
+                return BadRequest(new { message = "Transfer yapılmak istenen depodaki ürün adedi transfer için uygun değildir." });
 
             }
+        
+           
                
         }
-        private bool CheckStockForTransfer(int productId,int warehouseId)
-        {
-            if (GetProductStock(productId,warehouseId)!=null)
+        private ProductStock CheckStockForTransfer(int productId,int warehouseId)
+        {var result =GetProductStock(productId,warehouseId);
+            if (result!=null)
             {
-                return true;
+                return result;
             }
-            return false;
+            return null;
         }
 
         private ProductStock GetProductStock(int productId,int warehouseId)
